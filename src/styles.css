@@ -1,0 +1,183 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+/* ── Azadari Updates Sydney — Mourning/Solemn Design System ─────────────── */
+/* Dignified dark theme. No festive colours. Gold = sacred, not celebratory. */
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Brand palette */
+  --color-bg-base:    #0a0a0a;
+  --color-bg-surface: #1a1a1a;
+  --color-bg-raised:  #222222;
+  --color-border:     #2a2a2a;
+  --color-text:       #e8e8e8;
+  --color-text-muted: #9ca3af;
+  --color-gold:       #C9A227;
+  --color-gold-dim:   #a07c1a;
+  --color-crimson:    #7f1d1d;
+  --color-header-bg:  rgba(10, 10, 10, 0.92);
+}
+
+:root {
+  --bg-base:    #0a0a0a;
+  --bg-surface: #1a1a1a;
+  --bg-raised:  #222222;
+  --border:     #2a2a2a;
+  --text:       #e8e8e8;
+  --text-muted: #9ca3af;
+  --gold:       #C9A227;
+  --gold-dim:   #a07c1a;
+  --crimson:    #7f1d1d;
+  --header-bg:  rgba(10, 10, 10, 0.92);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  font-family: var(--font-sans);
+  background-color: var(--bg-base);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+  transition: color 180ms ease;
+}
+a:hover {
+  color: var(--gold-dim);
+}
+
+/* ── Utility classes ─────────────────────────────────────────────── */
+
+.page-wrap {
+  width: min(1120px, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+/* Card shell */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+.card:hover {
+  border-color: rgba(201, 162, 39, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Gold accent rule */
+.gold-rule {
+  width: 2.5rem;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 1px;
+  opacity: 0.7;
+}
+
+/* Audience badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+}
+.badge-gents  { color: #60a5fa; border-color: rgba(96, 165, 250, 0.35); }
+.badge-ladies { color: #f9a8d4; border-color: rgba(249, 168, 212, 0.35); }
+.badge-both   { color: var(--gold); border-color: rgba(201, 162, 39, 0.4); }
+
+/* Filter chip */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+.chip:hover {
+  background: var(--bg-raised);
+  color: var(--text);
+}
+.chip.active {
+  background: rgba(201, 162, 39, 0.12);
+  border-color: rgba(201, 162, 39, 0.5);
+  color: var(--gold);
+}
+
+/* Input / select */
+.field {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  color: var(--text);
+  font-size: 0.85rem;
+  padding: 0.45rem 0.75rem;
+  transition: border-color 180ms ease;
+  outline: none;
+}
+.field:focus {
+  border-color: rgba(201, 162, 39, 0.5);
+}
+.field::placeholder {
+  color: var(--text-muted);
+}
+
+/* Skeleton loader */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-surface) 25%, var(--bg-raised) 50%, var(--bg-surface) 75%);
+  background-size: 200% 100%;
+  border-radius: 0.4rem;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* Fade-in entry */
+.fade-in {
+  animation: fade-in 300ms ease both;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
