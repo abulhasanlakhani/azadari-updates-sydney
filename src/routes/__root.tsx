@@ -1,4 +1,4 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Scripts, createRootRoute, Link } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { QueryClientProvider } from '@tanstack/react-query'
@@ -9,7 +9,20 @@ import NewDataToast from '../components/NewDataToast'
 
 import appCss from '../styles.css?url'
 
+function NotFound() {
+  return (
+    <main className="flex flex-col items-center justify-center min-h-[60vh] gap-4 text-center px-4">
+      <h1 className="text-4xl font-bold">404</h1>
+      <p className="text-muted-foreground">Page not found.</p>
+      <Link to="/" className="text-primary underline underline-offset-4">
+        Back to home
+      </Link>
+    </main>
+  )
+}
+
 export const Route = createRootRoute({
+  notFoundComponent: NotFound,
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
