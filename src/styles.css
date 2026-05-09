@@ -197,3 +197,77 @@ a:hover {
   }
 }
 
+/* ── Print / PDF styles ──────────────────────────────────────────── */
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm 14mm 14mm 14mm;
+  }
+
+  /* Hide interactive chrome */
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Show print-only elements */
+  .print-only {
+    display: block !important;
+  }
+
+  /* Reset page background and text */
+  html,
+  body,
+  #app {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+  }
+
+  /* Ensure the content area fills the page without side padding overflow */
+  .page-wrap {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Cards — clean, printable */
+  .card {
+    background: #ffffff !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 10px !important;
+  }
+
+  /* Readable text in print */
+  .card * {
+    color: #1a1a1a !important;
+  }
+
+  /* Gold rule stays as a visual divider */
+  .gold-rule {
+    background: #a07c1a !important;
+    opacity: 1 !important;
+  }
+
+  /* Audience badges — print-safe borders */
+  .badge {
+    border: 1px solid #888 !important;
+    color: #1a1a1a !important;
+  }
+
+  /* Muted text — slightly lighter but still readable */
+  [class*="text-muted"],
+  [style*="--text-muted"] {
+    color: #555555 !important;
+  }
+
+  /* Remove animations */
+  .fade-in {
+    animation: none !important;
+  }
+}
+

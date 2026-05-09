@@ -5,6 +5,7 @@ import FilterBar from '../components/FilterBar'
 import SwipeView from '../components/SwipeView'
 import ListView from '../components/ListView'
 import SkeletonCards from '../components/SkeletonCards'
+import PrintButton from '../components/PrintButton'
 import type { FilterState } from '../types/majlis'
 
 export const Route = createFileRoute('/')({ component: HomePage })
@@ -33,10 +34,27 @@ function HomePage() {
 
   const total = allQuery.data?.length ?? 0
 
+  const printedAt = new Date().toLocaleDateString('en-AU', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+  })
+  const filteredCount = filtered?.length ?? 0
+
   return (
     <main className="page-wrap px-4 py-8">
-      {/* Page header */}
-      <div className="mb-8 text-center">
+      {/* Print-only header — hidden on screen, shown when printing */}
+      <div className="print-only" style={{ display: 'none', marginBottom: '16px' }}>
+        <div style={{ borderBottom: '2px solid #a07c1a', paddingBottom: '10px', marginBottom: '10px' }}>
+          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: 700, color: '#1a1a1a' }}>
+            Azadari Updates Sydney — Majalis 1448
+          </h1>
+          <p style={{ margin: '4px 0 0', fontSize: '12px', color: '#555' }}>
+            Printed: {printedAt} &nbsp;·&nbsp; {filteredCount} majalis listed
+          </p>
+        </div>
+      </div>
+
+      {/* Page header (screen only) */}
+      <div className="no-print mb-8 text-center">
         <div className="flex justify-center mb-4">
           <img
             src="/assets/logo.png"
@@ -58,21 +76,18 @@ function HomePage() {
         )}
       </div>
 
-      {/* Filters */}
-      <div className="mb-6 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-4">
+      {/* Filters (screen only) */}
+      <div className="no-print mb-6 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-4">
         <FilterBar
           filters={filters}
           onChange={setFilters}
           total={total}
-          filtered={filtered?.length ?? 0}
+          filtered={filteredCount}
         />
       </div>
 
-      {/* View toggle */}
-      <div className="mb-5 flex items-center justify-between">
-        <p className="m-0 text-xs text-[var(--text-muted)] uppercase tracking-widest font-medium">
-          {viewMode === 'list' ? 'List View' : 'Card View'}
-        </p>
+      {/* View toggle + print button (screen only) */}
+      <div className="no-print mb-5 flex items-center justify-between gap-3">
         <div className="flex rounded-lg border border-[var(--border)] overflow-hidden">
           <button
             onClick={() => setViewMode('list')}
@@ -104,6 +119,11 @@ function HomePage() {
             Swipe
           </button>
         </div>
+
+        {/* Print button — top, list view only */}
+        {viewMode === 'list' && !isLoading && !isError && (
+          <PrintButton position="top" />
+        )}
       </div>
 
       {/* Content */}
@@ -120,7 +140,15 @@ function HomePage() {
           </button>
         </div>
       ) : viewMode === 'list' ? (
-        <ListView majalis={filtered ?? []} />
+        <>
+          <ListView majalis={filtered ?? []} />
+          {/* Print button — bottom, list view only */}
+          {filteredCount > 0 && (
+            <div className="no-print mt-8">
+              <PrintButton position="bottom" />
+            </div>
+          )}
+        </>
       ) : (
         <SwipeView majalis={filtered ?? []} />
       )}
