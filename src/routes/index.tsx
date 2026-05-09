@@ -91,13 +91,14 @@ function HomePage() {
       </div>
 
       {/* View toggle + print button (screen only) */}
-      <div className="no-print mb-5 flex items-center justify-between gap-3">
-        <div className="flex rounded-lg border border-[var(--border)] overflow-hidden">
+      {/* On mobile: stacks vertically. On sm+: single row. */}
+      <div className="no-print mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex rounded-lg border border-[var(--border)] overflow-hidden self-start">
           {/* Cards */}
           <button
             onClick={() => setViewMode('cards')}
             aria-pressed={viewMode === 'cards'}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium whitespace-nowrap transition ${
               viewMode === 'cards'
                 ? 'bg-[rgba(201,162,39,0.15)] text-[var(--gold)]'
                 : 'bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text)]'
@@ -113,7 +114,7 @@ function HomePage() {
           <button
             onClick={() => setViewMode('table')}
             aria-pressed={viewMode === 'table'}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition border-l border-[var(--border)] ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium whitespace-nowrap transition border-l border-[var(--border)] ${
               viewMode === 'table'
                 ? 'bg-[rgba(201,162,39,0.15)] text-[var(--gold)]'
                 : 'bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text)]'
@@ -130,7 +131,7 @@ function HomePage() {
           <button
             onClick={() => setViewMode('swipe')}
             aria-pressed={viewMode === 'swipe'}
-            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition border-l border-[var(--border)] ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium whitespace-nowrap transition border-l border-[var(--border)] ${
               viewMode === 'swipe'
                 ? 'bg-[rgba(201,162,39,0.15)] text-[var(--gold)]'
                 : 'bg-[var(--bg-surface)] text-[var(--text-muted)] hover:text-[var(--text)]'
@@ -143,7 +144,7 @@ function HomePage() {
           </button>
         </div>
 
-        {/* Print button — top, list/table views only */}
+        {/* Print button — own row on mobile, inline on sm+ */}
         {isListMode && !isLoading && !isError && (
           <PrintButton position="top" />
         )}

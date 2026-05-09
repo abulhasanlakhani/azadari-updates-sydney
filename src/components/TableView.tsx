@@ -39,15 +39,15 @@ export default function TableView({ majalis }: TableViewProps) {
 
   return (
     <div className="overflow-x-auto rounded-xl border border-[var(--border)]">
-      <table className="w-full text-sm border-collapse">
+      <table className="w-full min-w-[700px] text-sm border-collapse">
         <thead>
           <tr className="border-b border-[var(--border)] bg-[var(--bg-raised)]">
             <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider whitespace-nowrap">Date</th>
             <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider whitespace-nowrap">Time</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Name / Organiser</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Audience</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Address</th>
-            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider">Speaker</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider whitespace-nowrap">Name / Organiser</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider whitespace-nowrap">Audience</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider whitespace-nowrap">Address</th>
+            <th className="px-4 py-3 text-left text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider whitespace-nowrap">Speaker</th>
           </tr>
         </thead>
         <tbody>

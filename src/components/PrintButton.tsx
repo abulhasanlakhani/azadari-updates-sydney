@@ -5,12 +5,12 @@ interface PrintButtonProps {
 export default function PrintButton({ position = 'top' }: PrintButtonProps) {
   return (
     <div
-      className={`no-print flex ${position === 'top' ? 'justify-end' : 'justify-center'}`}
+      className={`no-print flex ${position === 'bottom' ? 'justify-center' : 'justify-end'}`}
     >
       <button
         onClick={() => window.print()}
         aria-label="Print or save as PDF"
-        className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-[var(--text-muted)] transition hover:border-[var(--gold)] hover:text-[var(--gold)]"
+        className="flex items-center gap-2 px-4 py-2 text-sm font-medium whitespace-nowrap rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] text-[var(--text-muted)] transition hover:border-[var(--gold)] hover:text-[var(--gold)]"
       >
         <svg
           viewBox="0 0 24 24"
