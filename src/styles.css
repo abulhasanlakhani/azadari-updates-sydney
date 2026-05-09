@@ -21,7 +21,9 @@
   --color-header-bg:  rgba(10, 10, 10, 0.92);
 }
 
-:root {
+/* Default (dark) theme */
+:root,
+[data-theme="dark"] {
   --bg-base:    #0a0a0a;
   --bg-surface: #1a1a1a;
   --bg-raised:  #222222;
@@ -32,6 +34,20 @@
   --gold-dim:   #a07c1a;
   --crimson:    #7f1d1d;
   --header-bg:  rgba(10, 10, 10, 0.92);
+}
+
+/* Light theme — solemn parchment tones, not festive */
+[data-theme="light"] {
+  --bg-base:    #f4f0e8;
+  --bg-surface: #ebe6d8;
+  --bg-raised:  #e2dcc8;
+  --border:     #ccc5ae;
+  --text:       #1a1814;
+  --text-muted: #6b6258;
+  --gold:       #a07c1a;
+  --gold-dim:   #7a5e12;
+  --crimson:    #7f1d1d;
+  --header-bg:  rgba(244, 240, 232, 0.92);
 }
 
 * {

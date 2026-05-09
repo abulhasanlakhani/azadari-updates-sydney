@@ -3,9 +3,13 @@ import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { PersistQueryClientProvider, persister, queryClient } from '../lib/queryClient'
+import { ThemeProvider } from '../lib/ThemeContext'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import NewDataToast from '../components/NewDataToast'
+
+// Runs before React hydration to prevent flash of wrong theme
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('azadari-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`
 
 import appCss from '../styles.css?url'
 
@@ -43,16 +47,20 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        {/* Prevent flash of wrong theme before React hydrates */}
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className="font-sans antialiased [overflow-wrap:anywhere]">
         <PersistQueryClientProvider
           client={queryClient}
           persistOptions={{ persister }}
         >
-          <Header />
-          {children}
-          <Footer />
-          <NewDataToast />
+          <ThemeProvider>
+            <Header />
+            {children}
+            <Footer />
+            <NewDataToast />
+          </ThemeProvider>
           <TanStackDevtools
             config={{ position: 'bottom-right' }}
             plugins={[{ name: 'Tanstack Router', render: <TanStackRouterDevtoolsPanel /> }]}
