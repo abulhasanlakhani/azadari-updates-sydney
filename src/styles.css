@@ -269,5 +269,45 @@ a:hover {
   .fade-in {
     animation: none !important;
   }
+
+  /* Table — always used for print output */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+  thead tr {
+    background: #f0ece0 !important;
+  }
+  th {
+    padding: 7px 8px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #1a1a1a !important;
+    border: 1px solid #ccc !important;
+    background: #f0ece0 !important;
+  }
+  td {
+    padding: 6px 8px;
+    color: #1a1a1a !important;
+    border: 1px solid #ddd !important;
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) td {
+    background: #f9f7f1 !important;
+  }
+  tbody tr:nth-child(odd) td {
+    background: #ffffff !important;
+  }
+  /* Audience badge in print */
+  table .badge {
+    border: 1px solid #888 !important;
+    color: #1a1a1a !important;
+    font-size: 9px !important;
+    padding: 1px 5px !important;
+  }
 }
 
