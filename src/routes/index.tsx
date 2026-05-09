@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useFilteredMajalis, useMajalis } from '../hooks/useMajalis'
 import FilterBar from '../components/FilterBar'
@@ -19,8 +19,14 @@ const DEFAULT_FILTERS: FilterState = {
 type ViewMode = 'swipe' | 'list'
 
 function HomePage() {
-  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
+  // Default to swipe on mobile, list on desktop — resolved after mount to avoid SSR mismatch
   const [viewMode, setViewMode] = useState<ViewMode>('list')
+
+  useEffect(() => {
+    if (window.innerWidth < 640) setViewMode('swipe')
+  }, [])
+
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
 
   const allQuery = useMajalis()
   const { data: filtered, isLoading, isError, refetch, isFetching } = useFilteredMajalis(filters)

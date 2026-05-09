@@ -42,9 +42,9 @@ export default function SwipeView({ majalis }: SwipeViewProps) {
         <span className="text-[var(--gold)] font-semibold">{index + 1}</span> / {majalis.length}
       </p>
 
-      {/* Card area */}
+      {/* Card area — full width with touch handling */}
       <div
-        className="relative w-full max-w-md overflow-hidden"
+        className="relative w-full overflow-hidden"
         style={{ minHeight: 280 }}
         onTouchStart={(e) => { dragStartX.current = e.touches[0].clientX }}
         onTouchEnd={(e) => {
