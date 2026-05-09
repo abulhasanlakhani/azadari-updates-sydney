@@ -26,7 +26,7 @@ export default function FilterBar({ filters, onChange, total, filtered }: Filter
           placeholder="Search by speaker, name or venue…"
           value={filters.search}
           onChange={(e) => set({ search: e.target.value })}
-          className="field w-full pl-9"
+          className="field w-full pl-9!"
           aria-label="Search majalis"
         />
       </div>
