@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useFilteredMajalis, useMajalis } from '../hooks/useMajalis'
 import FilterBar from '../components/FilterBar'
+import FilterDrawer from '../components/FilterDrawer'
 import SwipeView from '../components/SwipeView'
 import ListView from '../components/ListView'
 import TableView from '../components/TableView'
@@ -29,6 +30,15 @@ function HomePage() {
   }, [])
 
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
+  const [drawerOpen, setDrawerOpen] = useState(false)
+
+  // Count active filters for the badge
+  const activeFilterCount = [
+    filters.audience !== 'All',
+    !!filters.dateFrom,
+    !!filters.dateTo,
+    !!filters.search,
+  ].filter(Boolean).length
 
   const allQuery = useMajalis()
   const { data: filtered, isLoading, isError, refetch, isFetching } = useFilteredMajalis(filters)
@@ -80,9 +90,46 @@ function HomePage() {
         )}
       </div>
 
-      {/* Filters (screen only) */}
-      <div className="no-print mb-6 rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-4">
-        <FilterBar
+      {/* Filters — inline on desktop, drawer on mobile */}
+      <div className="no-print mb-6">
+        {/* Desktop: always visible */}
+        <div className="hidden sm:block rounded-xl border border-[var(--border)] bg-[var(--bg-surface)] p-4">
+          <FilterBar
+            filters={filters}
+            onChange={setFilters}
+            total={total}
+            filtered={filteredCount}
+          />
+        </div>
+
+        {/* Mobile: filter button + active count badge */}
+        <div className="flex items-center justify-between sm:hidden">
+          <button
+            onClick={() => setDrawerOpen(true)}
+            className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] px-3 py-2 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition"
+            aria-label="Open filters"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <line x1="4" y1="6" x2="20" y2="6"/>
+              <line x1="8" y1="12" x2="16" y2="12"/>
+              <line x1="11" y1="18" x2="13" y2="18"/>
+            </svg>
+            Filters
+            {activeFilterCount > 0 && (
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[var(--gold)] text-[10px] font-bold text-[#0a0a0a]">
+                {activeFilterCount}
+              </span>
+            )}
+          </button>
+          <p className="text-xs text-[var(--text-muted)]">
+            <span className="text-[var(--gold)] font-medium">{filteredCount}</span> of {total} majalis
+          </p>
+        </div>
+
+        {/* Mobile bottom sheet drawer */}
+        <FilterDrawer
+          open={drawerOpen}
+          onClose={() => setDrawerOpen(false)}
           filters={filters}
           onChange={setFilters}
           total={total}
