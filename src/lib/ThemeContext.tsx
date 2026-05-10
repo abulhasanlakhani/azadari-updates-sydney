@@ -13,11 +13,17 @@ const ThemeContext = createContext<ThemeContextValue>({
 })
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window === 'undefined') return 'dark'
-    const raw = localStorage.getItem('azadari-theme')
-    return raw === 'light' ? 'light' : 'dark'
-  })
+  // Always start with 'dark' so server and client initial renders match.
+  // The inline script in __root.tsx already sets data-theme on <html> before
+  // React hydrates, so the visual is correct. After mount we sync React state
+  // from localStorage, which may trigger a re-render (client-side only, not
+  // a hydration mismatch).
+  const [theme, setTheme] = useState<Theme>('dark')
+
+  useEffect(() => {
+    const saved = localStorage.getItem('azadari-theme')
+    setTheme(saved === 'light' ? 'light' : 'dark')
+  }, [])
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
