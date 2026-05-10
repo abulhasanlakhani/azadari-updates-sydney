@@ -53,13 +53,13 @@ export default function MajlisCard({ majlis, index = 0 }: MajlisCardProps) {
       {/* Time & Address */}
       <div className="space-y-1.5 text-sm text-[var(--text-muted)]">
         <div className="flex items-center gap-2">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 text-[var(--gold)] opacity-70" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-[var(--gold)] opacity-90" aria-hidden="true">
             <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
           </svg>
           <span>{formatTime(majlis.time)}</span>
         </div>
         <div className="flex items-start gap-2">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 mt-0.5 text-[var(--gold)] opacity-70" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5 text-[var(--gold)] opacity-90" aria-hidden="true">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
           </svg>
           <span className="leading-snug">{majlis.address}</span>
@@ -79,7 +79,7 @@ export default function MajlisCard({ majlis, index = 0 }: MajlisCardProps) {
       {/* Contact */}
       {majlis.contact && (
         <div className="mt-2">
-          <p className="m-0 text-xs text-[var(--text-muted)] opacity-60">
+          <p className="m-0 text-xs text-[var(--text-muted)]">
             Contact: {majlis.contact}
           </p>
         </div>
