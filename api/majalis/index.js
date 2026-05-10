@@ -18,9 +18,15 @@ app.http('majalis', {
     }
 
     const data = await response.json()
+
+    // Strip PII fields that have no use in the UI before sending to client
+    const sanitised = {
+      majalis: (data.majalis ?? []).map(({ email: _email, ...rest }) => rest),
+    }
+
     return {
       status: 200,
-      jsonBody: data,
+      jsonBody: sanitised,
     }
   },
 })

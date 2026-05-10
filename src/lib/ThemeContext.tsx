@@ -15,7 +15,8 @@ const ThemeContext = createContext<ThemeContextValue>({
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window === 'undefined') return 'dark'
-    return (localStorage.getItem('azadari-theme') as Theme) || 'dark'
+    const raw = localStorage.getItem('azadari-theme')
+    return raw === 'light' ? 'light' : 'dark'
   })
 
   useEffect(() => {

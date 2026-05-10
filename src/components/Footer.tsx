@@ -1,5 +1,5 @@
 const FACEBOOK_URL = 'https://www.facebook.com/AzadariUpdateSydney'
-const YOUTUBE_URL = 'http://www.youtube.com/@azadariupdates-sydney7367'
+const YOUTUBE_URL = 'https://www.youtube.com/@azadariupdates-sydney7367'
 
 export default function Footer() {
   return (

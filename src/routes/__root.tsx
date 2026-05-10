@@ -1,6 +1,5 @@
+import React, { lazy, Suspense } from 'react'
 import { HeadContent, Scripts, createRootRoute, Link } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { PersistQueryClientProvider, persister, queryClient } from '../lib/queryClient'
 import { ThemeProvider } from '../lib/ThemeContext'
@@ -9,7 +8,24 @@ import Header from '../components/Header'
 import NewDataToast from '../components/NewDataToast'
 
 // Runs before React hydration to prevent flash of wrong theme
-const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('azadari-theme')||'dark';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`
+const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('azadari-theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');}catch(e){}})();`
+
+// Devtools are lazy-loaded in development only — fully tree-shaken in production
+const DevTools = import.meta.env.DEV
+  ? lazy(() =>
+      Promise.all([
+        import('@tanstack/react-devtools'),
+        import('@tanstack/react-router-devtools'),
+      ]).then(([{ TanStackDevtools }, { TanStackRouterDevtoolsPanel }]) => ({
+        default: () => (
+          <TanStackDevtools
+            config={{ position: 'bottom-right' }}
+            plugins={[{ name: 'Tanstack Router', render: <TanStackRouterDevtoolsPanel /> }]}
+          />
+        ),
+      }))
+    )
+  : () => null
 
 import appCss from '../styles.css?url'
 
@@ -61,10 +77,11 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <Footer />
             <NewDataToast />
           </ThemeProvider>
-          <TanStackDevtools
-            config={{ position: 'bottom-right' }}
-            plugins={[{ name: 'Tanstack Router', render: <TanStackRouterDevtoolsPanel /> }]}
-          />
+          {import.meta.env.DEV && (
+            <Suspense fallback={null}>
+              <DevTools />
+            </Suspense>
+          )}
         </PersistQueryClientProvider>
         <Scripts />
       </body>
