@@ -16,7 +16,7 @@ A mobile-friendly community web app for Sydney's Shia Muslim community to browse
 - Returns `{ majalis: Majlis[] }`
 - Fields: id, name, email, contact, date (YYYY-MM-DD), time (HH:mm), address, audience, speakerNotes, createdAt
 - No auth required. Client-side filtering only.
-- Polling: every 5 minutes. staleTime: 3 minutes. Cache persisted to localStorage.
+- Polling: every 15 minutes. staleTime: 15 minutes. Cache persisted to localStorage.
 
 ## Design System — STRICTLY SOLEMN / MOURNING AESTHETIC
 This app is for Azadari — mourning for Imam Hussain (a.s.). **Do NOT make it look festive or decorative.**
@@ -62,24 +62,30 @@ This app is for Azadari — mourning for Imam Hussain (a.s.). **Do NOT make it l
 ```
 src/
   components/
-    Header.tsx          — sticky nav with logo + social icons
+    Header.tsx          — sticky nav with logo, social icons, theme toggle
     Footer.tsx          — bottom section with logo + social links
-    FilterBar.tsx       — search + audience chips + date range
+    FilterBar.tsx       — search + audience chips + date range (desktop always visible)
+    FilterDrawer.tsx    — mobile bottom-sheet drawer wrapping FilterBar
     MajlisCard.tsx      — individual majlis display card
     SwipeView.tsx       — Framer Motion swipe card UX
-    ListView.tsx        — grouped-by-date list UX
+    ListView.tsx        — grouped-by-date list UX with infinite scroll
+    TableView.tsx       — compact table view
     SkeletonCards.tsx   — loading placeholders
     NewDataToast.tsx    — toast for newly detected majalis
+    PrintButton.tsx     — print trigger (top + bottom of list)
+    ThemeToggle.tsx     — light/dark toggle (also in Header)
   hooks/
     useMajalis.ts       — TanStack Query hooks + client-side filtering
   lib/
     api.ts              — fetchMajalis() function
     queryClient.ts      — QueryClient + persister setup
+    ThemeContext.tsx    — theme state (dark default, synced from localStorage post-hydration)
   types/
     majlis.ts           — TypeScript types for API data
   routes/
-    __root.tsx          — HTML shell + QueryClientProvider wrapper
+    __root.tsx          — HTML shell + QueryClientProvider + ThemeProvider wrapper
     index.tsx           — main page (filters + view toggle + results)
+    about.tsx           — about page
 ```
 
 ## Coding Conventions
@@ -97,7 +103,19 @@ src/
 - Do not add backend or server-side logic — this is a CSR SPA
 - Do not stretch or misuse the Panja logo
 
-## Deployment
+## Git Workflow
+
+This project follows **Lightweight Gitflow**:
+
+- `main` is always production-stable — direct commits are not allowed
+- All work goes on a short-lived branch:
+  - `feature/<name>` — new features
+  - `fix/<name>` — bug fixes
+  - `chore/<name>` — maintenance (deps, config, docs)
+- Open a PR to merge into `main`; delete the branch after merge
+- Branch naming: lowercase, hyphen-separated (e.g. `fix/card-layout`, `feature/speaker-filter`)
+
+
 - Platform: Azure Static Web Apps (Free tier)
 - CI/CD: GitHub Actions (`.github/workflows/azure-static-web-apps.yml`)
 - No SSR, no server functions — pure CSR SPA

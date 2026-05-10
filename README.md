@@ -9,12 +9,16 @@ Built with love and respect for Imam Hussain ibn Ali (a.s.) and the community of
 
 ## Features
 
-- List view — browse all majalis grouped by date
-- Swipe view — swipe through individual cards on mobile
-- Filters — search by speaker/name/venue, filter by audience (Gents/Ladies/Both), date range
-- Live polling — checks for new majalis every 5 minutes
+- Cards view — browse all majalis grouped by date with infinite scroll
+- Swipe view — swipe through individual cards (default on mobile)
+- Table view — compact tabular layout
+- Filters — search by name/venue/speaker, filter by audience (Gents/Ladies/Both), date range
+- Mobile filter drawer — collapsible bottom-sheet filter panel on mobile
+- Data polling — checks for new majalis every 15 minutes
 - Offline cache — last-fetched data persisted to localStorage
 - New data toast — notifies when new entries are detected
+- Light / dark theme — persisted to localStorage
+- Print view — print-friendly table layout
 
 ## Tech Stack
 
@@ -41,6 +45,21 @@ npm run dev
 # Build for production
 npm run build
 ```
+
+## Contributing
+
+This project follows **Lightweight Gitflow**:
+
+```
+main          ← production-stable, never commit directly
+feature/<name>  ← new features
+fix/<name>      ← bug fixes
+chore/<name>    ← maintenance (deps, config, docs)
+```
+
+1. Branch off `main`: `git checkout -b feature/my-feature`
+2. Commit your changes with descriptive messages
+3. Open a PR → merge to `main` → delete the branch
 
 ## Deployment
 
