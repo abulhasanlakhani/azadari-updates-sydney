@@ -35,18 +35,17 @@ export default function MajlisCard({ majlis, index = 0 }: MajlisCardProps) {
       className="card p-5 fade-in"
       style={{ animationDelay: `${index * 60}ms` }}
     >
-      {/* Header row */}
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div className="min-w-0">
-          <p className="m-0 text-xs text-[var(--text-muted)] font-medium uppercase tracking-wider mb-1">
-            {formatDate(majlis.date)}
-          </p>
-          <h3 className="m-0 text-base font-semibold text-[var(--text)] leading-snug truncate">
-            {majlis.name || 'Majlis'}
-          </h3>
-        </div>
+      {/* Row 1: date + badge */}
+      <div className="flex items-center justify-between gap-2 mb-1">
+        <p className="m-0 text-xs text-[var(--text-muted)] font-medium uppercase tracking-wider">
+          {formatDate(majlis.date)}
+        </p>
         <AudienceBadge audience={majlis.audience} />
       </div>
+      {/* Row 2: organiser name — full width, no badge competing */}
+      <h3 className="m-0 text-base font-semibold text-[var(--text)] leading-snug mb-3">
+        {majlis.name || 'Majlis'}
+      </h3>
 
       {/* Gold divider */}
       <div className="gold-rule mb-3" />
