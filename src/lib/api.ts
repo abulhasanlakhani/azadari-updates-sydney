@@ -1,3 +1,4 @@
+import { MajalisResponseSchema } from '../types/majlis'
 import type { MajalisResponse } from '../types/majlis'
 
 export async function fetchMajalis(): Promise<MajalisResponse> {
@@ -5,5 +6,6 @@ export async function fetchMajalis(): Promise<MajalisResponse> {
   if (!response.ok) {
     throw new Error(`Failed to fetch majalis: ${response.status} ${response.statusText}`)
   }
-  return response.json() as Promise<MajalisResponse>
+  const json = await response.json()
+  return MajalisResponseSchema.parse(json)
 }
