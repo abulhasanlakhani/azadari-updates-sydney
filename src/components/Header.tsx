@@ -45,8 +45,18 @@ export default function Header() {
           </div>
         </Link>
 
-        {/* Right side: social links + theme toggle */}
+        {/* Right side: add majlis link + social links + theme toggle */}
         <div className="flex items-center gap-1">
+          <Link
+            to="/add"
+            className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-surface)] hover:text-[var(--gold)] no-underline"
+            aria-label="Submit a new majlis"
+          >
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            Add Majlis
+          </Link>
           <a
             href={FACEBOOK_URL}
             target="_blank"
