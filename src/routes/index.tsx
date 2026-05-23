@@ -97,13 +97,14 @@ function HomePage() {
           <FilterBar
             filters={filters}
             onChange={setFilters}
+            onClear={() => setFilters(DEFAULT_FILTERS)}
             total={total}
             filtered={filteredCount}
           />
         </div>
 
         {/* Mobile: filter button + active count badge */}
-        <div className="flex items-center justify-between sm:hidden">
+        <div className="flex items-center gap-3 sm:hidden">
           <button
             onClick={() => setDrawerOpen(true)}
             className="flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--bg-surface)] px-3 py-2 text-sm text-[var(--text-muted)] hover:text-[var(--text)] transition"
@@ -121,6 +122,15 @@ function HomePage() {
               </span>
             )}
           </button>
+          {activeFilterCount > 0 && (
+            <button
+              onClick={() => setFilters(DEFAULT_FILTERS)}
+              className="text-xs text-[var(--gold)] underline underline-offset-2 hover:opacity-75 transition"
+            >
+              Clear filters
+            </button>
+          )}
+          <div className="flex-1" />
           <p className="text-xs text-[var(--text-muted)]">
             <span className="text-[var(--gold)] font-medium">{filteredCount}</span> of {total} majalis
           </p>
@@ -132,6 +142,7 @@ function HomePage() {
           onClose={() => setDrawerOpen(false)}
           filters={filters}
           onChange={setFilters}
+          onClear={() => setFilters(DEFAULT_FILTERS)}
           total={total}
           filtered={filteredCount}
         />

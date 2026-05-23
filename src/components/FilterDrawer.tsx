@@ -8,6 +8,7 @@ interface FilterDrawerProps {
   onClose: () => void
   filters: FilterState
   onChange: (filters: FilterState) => void
+  onClear: () => void
   total: number
   filtered: number
 }
@@ -17,6 +18,7 @@ export default function FilterDrawer({
   onClose,
   filters,
   onChange,
+  onClear,
   total,
   filtered,
 }: FilterDrawerProps) {
@@ -78,6 +80,7 @@ export default function FilterDrawer({
             <FilterBar
               filters={filters}
               onChange={onChange}
+              onClear={onClear}
               total={total}
               filtered={filtered}
             />
