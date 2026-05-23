@@ -3,13 +3,23 @@ import type { FilterState, AudienceFilter } from '../types/majlis'
 interface FilterBarProps {
   filters: FilterState
   onChange: (filters: FilterState) => void
+  onClear: () => void
   total: number
   filtered: number
 }
 
 const AUDIENCE_OPTIONS: AudienceFilter[] = ['All', 'Gents', 'Ladies', 'Both']
 
-export default function FilterBar({ filters, onChange, total, filtered }: FilterBarProps) {
+function hasActiveFilters(filters: FilterState) {
+  return (
+    filters.audience !== 'All' ||
+    !!filters.dateFrom ||
+    !!filters.dateTo ||
+    !!filters.search
+  )
+}
+
+export default function FilterBar({ filters, onChange, onClear, total, filtered }: FilterBarProps) {
   const set = (partial: Partial<FilterState>) => onChange({ ...filters, ...partial })
 
   return (
@@ -70,11 +80,21 @@ export default function FilterBar({ filters, onChange, total, filtered }: Filter
         </div>
       </div>
 
-      {/* Result count */}
-      <p className="m-0 text-xs text-[var(--text-muted)]">
-        Showing <span className="text-[var(--gold)] font-medium">{filtered}</span> of {total} majalis
-        {filters.audience !== 'All' && <> · <span className="text-[var(--text)]">{filters.audience}</span></>}
-      </p>
+      {/* Result count + clear filters */}
+      <div className="flex items-center justify-between">
+        <p className="m-0 text-xs text-[var(--text-muted)]">
+          Showing <span className="text-[var(--gold)] font-medium">{filtered}</span> of {total} majalis
+          {filters.audience !== 'All' && <> · <span className="text-[var(--text)]">{filters.audience}</span></>}
+        </p>
+        {hasActiveFilters(filters) && (
+          <button
+            onClick={onClear}
+            className="text-xs text-[var(--gold)] underline underline-offset-2 hover:opacity-75 transition"
+          >
+            Clear filters
+          </button>
+        )}
+      </div>
     </div>
   )
 }
