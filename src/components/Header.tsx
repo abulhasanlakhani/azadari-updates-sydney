@@ -48,7 +48,7 @@ export default function Header() {
         {/* Right side: add majlis link + social links + theme toggle */}
         <div className="flex items-center gap-1">
           <Link
-            to="/submit"
+            to="/add"
             className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-surface)] hover:text-[var(--gold)] no-underline"
             aria-label="Submit a new majlis"
           >

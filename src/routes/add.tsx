@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
 import SubmitForm from '../components/SubmitForm'
 
-export const Route = createFileRoute('/submit')({ component: SubmitPage })
+export const Route = createFileRoute('/add')({ component: AddMajlisPage })
 
-function SubmitPage() {
+function AddMajlisPage() {
   return (
     <main className="page-wrap px-4 py-8">
       <div className="mx-auto max-w-2xl">
