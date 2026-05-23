@@ -100,19 +100,43 @@ export default function SubmitForm() {
       Object.keys(EMPTY).map((k) => [k, true])
     ) as Record<keyof FormValues, boolean>
     setTouched(allTouched)
-    const errs = validate(values)
+
+    // Trim all string values before validation and submission
+    const trimmed: FormValues = {
+      name: values.name.trim(),
+      contact: values.contact.trim(),
+      date: values.date.trim(),
+      time: values.time.trim(),
+      address: values.address.trim(),
+      audience: values.audience.trim(),
+      speakerNotes: values.speakerNotes.trim(),
+    }
+    setValues(trimmed)
+
+    const errs = validate(trimmed)
     setErrors(errs)
     if (Object.keys(errs).length > 0) return
+
+    // Explicit allowlist — never spread arbitrary state into the payload
+    if (!AUDIENCE_OPTIONS.includes(trimmed.audience as typeof AUDIENCE_OPTIONS[number])) return
 
     setStatus('submitting')
     try {
       const res = await fetch(SUBMISSION_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(values),
+        body: JSON.stringify({
+          name: trimmed.name,
+          contact: trimmed.contact,
+          date: trimmed.date,
+          time: trimmed.time,
+          address: trimmed.address,
+          audience: trimmed.audience,
+          speakerNotes: trimmed.speakerNotes,
+        }),
       })
       if (!res.ok) throw new Error('Submission failed')
-      setSubmitted(values)
+      setSubmitted(trimmed)
       setStatus('success')
     } catch {
       setStatus('error')
@@ -198,6 +222,7 @@ export default function SubmitForm() {
             onBlur={() => blur('name')}
             placeholder="Enter full name"
             autoComplete="name"
+            maxLength={80}
             className={`field w-full ${touched.name && errors.name ? 'border-[var(--crimson)]!' : ''}`}
             aria-invalid={touched.name && !!errors.name}
             aria-describedby={errors.name ? 'err-name' : undefined}
@@ -221,6 +246,7 @@ export default function SubmitForm() {
             placeholder="+61 ..."
             autoComplete="tel"
             inputMode="tel"
+            maxLength={20}
             className={`field w-full ${touched.contact && errors.contact ? 'border-[var(--crimson)]!' : ''}`}
             aria-invalid={touched.contact && !!errors.contact}
             aria-describedby={errors.contact ? 'err-contact' : undefined}
@@ -285,6 +311,7 @@ export default function SubmitForm() {
             onBlur={() => blur('address')}
             placeholder="Street address, suburb, postcode"
             autoComplete="street-address"
+            maxLength={200}
             className={`field w-full ${touched.address && errors.address ? 'border-[var(--crimson)]!' : ''}`}
             aria-invalid={touched.address && !!errors.address}
             aria-describedby={errors.address ? 'err-address' : undefined}
@@ -299,20 +326,17 @@ export default function SubmitForm() {
           <span className="text-sm font-medium text-[var(--text)]" id="audience-label">
             Audience <span className="text-[var(--gold)]" aria-hidden="true">*</span>
           </span>
-          <div className="flex gap-2" role="radiogroup" aria-labelledby="audience-label">
+          <div className="flex items-center gap-1.5" role="group" aria-labelledby="audience-label">
             {AUDIENCE_OPTIONS.map((opt) => (
-              <label key={opt} className="flex items-center gap-1.5 cursor-pointer">
-                <input
-                  type="radio"
-                  name="audience"
-                  value={opt}
-                  checked={values.audience === opt}
-                  onChange={() => set('audience', opt)}
-                  onBlur={() => blur('audience')}
-                  className="accent-[var(--gold)]"
-                />
-                <span className="text-sm text-[var(--text-muted)]">{opt}</span>
-              </label>
+              <button
+                key={opt}
+                type="button"
+                onClick={() => { set('audience', opt); setTouched((t) => ({ ...t, audience: true })) }}
+                className={`chip ${values.audience === opt ? 'active' : ''}`}
+                aria-pressed={values.audience === opt}
+              >
+                {opt}
+              </button>
             ))}
           </div>
           {touched.audience && errors.audience && (
@@ -333,6 +357,7 @@ export default function SubmitForm() {
             onChange={(e) => set('speakerNotes', e.target.value)}
             placeholder="Optional speaker name or any helpful notes"
             className="field w-full resize-y"
+            maxLength={500}
           />
         </div>
       </div>
