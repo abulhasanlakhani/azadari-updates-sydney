@@ -41,7 +41,8 @@
     "jsdom": "^28.1.0",
     "typescript": "^6.0.2",
     "vite": "^8.0.0",
-    "vitest": "^4.1.5"
+    "vitest": "^4.1.5",
+    "wrangler": "^4.94.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
