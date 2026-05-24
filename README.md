@@ -13,7 +13,9 @@ Built with love and respect for Imam Hussain ibn Ali (a.s.) and the community of
 - Swipe view — swipe through individual cards (default on mobile)
 - Table view — compact tabular layout
 - Filters — search by name/venue/speaker, filter by audience (Gents/Ladies/Both), date range
+- Clear filters — one-tap reset for all active filters
 - Mobile filter drawer — collapsible bottom-sheet filter panel on mobile
+- Submit a Majlis — community members can submit new majalis via the `/add` page
 - Data polling — checks for new majalis every 15 minutes
 - Offline cache — last-fetched data persisted to localStorage
 - New data toast — notifies when new entries are detected
@@ -65,9 +67,12 @@ chore/<name>    ← maintenance (deps, config, docs)
 
 Deployed to Azure Static Web Apps via GitHub Actions.
 
+**Live site:** [azadariupdatessydney.com](https://azadariupdatessydney.com)
+
 1. Create an Azure Static Web App resource
 2. Add the deployment token to GitHub Secrets as `AZURE_STATIC_WEB_APPS_API_TOKEN`
 3. Push to `main` branch to trigger deployment
+4. Custom domain (`azadariupdatessydney.com` + `www`) managed via Azure DNS
 
 ## Social
 

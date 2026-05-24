@@ -73,6 +73,7 @@ src/
     SkeletonCards.tsx   — loading placeholders
     NewDataToast.tsx    — toast for newly detected majalis
     PrintButton.tsx     — print trigger (top + bottom of list)
+    SubmitForm.tsx      — native Add a Majlis form with validation + success panel
     ThemeToggle.tsx     — light/dark toggle (also in Header)
   hooks/
     useMajalis.ts       — TanStack Query hooks + client-side filtering
@@ -85,6 +86,7 @@ src/
   routes/
     __root.tsx          — HTML shell + QueryClientProvider + ThemeProvider wrapper
     index.tsx           — main page (filters + view toggle + results)
+    add.tsx             — /add page wrapping SubmitForm
     about.tsx           — about page
 ```
 
@@ -98,9 +100,9 @@ src/
 ## What NOT to do
 - Do not add decorative gradients, glows, or festive animations
 - Do not add bright/vivid colours outside the defined palette
-- Do not add features unrelated to browsing/filtering majalis
+- Do not add features unrelated to browsing, filtering, or submitting majalis
 - Do not add authentication or user accounts
-- Do not add backend or server-side logic — this is a CSR SPA
+- Do not add backend or server-side logic — this is a CSR SPA (Azure Function proxy is the only exception)
 - Do not stretch or misuse the Panja logo
 
 ## Git Workflow
@@ -118,7 +120,8 @@ This project follows **Lightweight Gitflow**:
 
 - Platform: Azure Static Web Apps (Free tier)
 - CI/CD: GitHub Actions (`.github/workflows/azure-static-web-apps.yml`)
-- No SSR, no server functions — pure CSR SPA
+- Live URL: `https://azadariupdatessydney.com` (custom domain via Azure DNS; also on `www.`)
+- No SSR, no server functions — pure CSR SPA (Azure Function proxy at `/api/majalis` handles CORS)
 
 ## Seasonal Context
 This app is relevant only during Muharram/Safar/Rabi al-Awwal 1448 (approximately May–July 2026).
