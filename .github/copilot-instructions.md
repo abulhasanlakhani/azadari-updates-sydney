@@ -9,6 +9,7 @@ A mobile-friendly community web app for Sydney's Shia Muslim community to browse
 - **Styling**: Tailwind CSS v4 (utility-first, CSS custom properties for tokens)
 - **Data fetching**: TanStack Query v5 with `@tanstack/react-query-persist-client` + localStorage
 - **Animations**: Framer Motion (subtle only — 150–300ms, ease-in-out)
+- **Package manager**: pnpm (v10.33.0) — use `pnpm install`, `pnpm build`, `pnpm dev`
 - **Build**: Vite 8
 
 ## API
