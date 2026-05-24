@@ -3,6 +3,8 @@ const { app } = require('@azure/functions')
 const UPSTREAM_URL = process.env.MAJALIS_API_URL ?? 'https://d3ma4bqipgu84o.cloudfront.net/api/majalis'
 
 const ALLOWED_ORIGINS = [
+  'https://azadariupdatessydney.com',
+  'https://www.azadariupdatessydney.com',
   'https://victorious-ocean-03bbb1e00.7.azurestaticapps.net',
   'http://localhost:3000',
   'http://localhost:4173',
@@ -14,6 +16,18 @@ app.http('majalis', {
   route: 'majalis',
   handler: async (request, context) => {
     context.log('Proxying majalis API request')
+
+    // Defence-in-depth: Cloudflare injects CF-IPCountry on every request.
+    // Block non-AU traffic even if someone bypasses the Cloudflare Worker.
+    const cfCountry = request.headers.get('cf-ipcountry') ?? ''
+    if (cfCountry && cfCountry !== 'AU') {
+      context.log(`Blocked request from country: ${cfCountry}`)
+      return {
+        status: 403,
+        body: JSON.stringify({ error: 'Forbidden' }),
+        headers: { 'Content-Type': 'application/json' },
+      }
+    }
 
     // Reject requests not originating from the known app origin
     const origin = request.headers.get('origin') ?? ''

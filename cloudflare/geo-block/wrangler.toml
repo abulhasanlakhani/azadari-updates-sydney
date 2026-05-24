@@ -1,0 +1,8 @@
+name = "azadari-geo-block"
+main = "src/index.js"
+compatibility_date = "2024-11-01"
+
+routes = [
+  { pattern = "azadariupdatessydney.com/*", zone_name = "azadariupdatessydney.com" },
+  { pattern = "www.azadariupdatessydney.com/*", zone_name = "azadariupdatessydney.com" }
+]
