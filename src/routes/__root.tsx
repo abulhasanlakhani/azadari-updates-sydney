@@ -41,18 +41,77 @@ function NotFound() {
   )
 }
 
+const SITE_URL = 'https://azadariupdatessydney.com'
+const SITE_NAME = 'Azadari Updates Sydney'
+const SITE_TITLE = 'Azadari Updates Sydney | Majalis Schedule Muharram 1448 – Sydney NSW'
+const SITE_DESCRIPTION =
+  'Browse upcoming majalis (Islamic mourning gatherings) in Sydney, NSW, Australia for Muharram 1448 / 2026. Azadari events for the Shia Muslim community in Sydney — schedules, venues, and speakers.'
+const OG_IMAGE = `${SITE_URL}/assets/logo.png`
+
+const JSON_LD = JSON.stringify([
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE_NAME,
+    url: SITE_URL,
+    description: SITE_DESCRIPTION,
+    inLanguage: 'en-AU',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE_NAME,
+    url: SITE_URL,
+    sameAs: [
+      'https://www.facebook.com/AzadariUpdateSydney',
+      'http://www.youtube.com/@azadariupdates-sydney7367',
+    ],
+  },
+])
+
 export const Route = createRootRoute({
   notFoundComponent: NotFound,
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { name: 'description', content: 'Browse upcoming majalis in Sydney for Muharram 1448 / 2026' },
-      { title: 'Azadari Updates Sydney' },
+      { title: SITE_TITLE },
+      { name: 'description', content: SITE_DESCRIPTION },
+      {
+        name: 'keywords',
+        content:
+          'Azadari Sydney, majalis Sydney, Muharram 2026 Australia, Shia Muslim Sydney, Muharram Sydney NSW, Azadari Updates Sydney, Islamic events Sydney, Muharram 1448, majalis NSW, Imam Hussain Sydney, Safar majalis Sydney',
+      },
+      { name: 'robots', content: 'index, follow' },
+      // Geo targeting (Bing + legacy crawlers)
+      { name: 'geo.region', content: 'AU-NSW' },
+      { name: 'geo.placename', content: 'Sydney, NSW, Australia' },
+      { name: 'geo.position', content: '-33.8688;151.2093' },
+      { name: 'ICBM', content: '-33.8688, 151.2093' },
+      // Open Graph
+      { property: 'og:type', content: 'website' },
+      { property: 'og:site_name', content: SITE_NAME },
+      { property: 'og:title', content: SITE_TITLE },
+      { property: 'og:description', content: SITE_DESCRIPTION },
+      { property: 'og:url', content: SITE_URL },
+      { property: 'og:image', content: OG_IMAGE },
+      { property: 'og:locale', content: 'en_AU' },
+      // Twitter Card
+      { name: 'twitter:card', content: 'summary' },
+      { name: 'twitter:title', content: SITE_TITLE },
+      { name: 'twitter:description', content: SITE_DESCRIPTION },
+      { name: 'twitter:image', content: OG_IMAGE },
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
       { rel: 'icon', href: '/assets/logo.png' },
+      { rel: 'canonical', href: SITE_URL },
+    ],
+    scripts: [
+      {
+        type: 'application/ld+json',
+        children: JSON_LD,
+      },
     ],
   }),
   shellComponent: RootDocument,
