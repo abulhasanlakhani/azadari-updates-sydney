@@ -10,6 +10,9 @@ import NewDataToast from '../components/NewDataToast'
 // Runs before React hydration to prevent flash of wrong theme
 const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('azadari-theme');document.documentElement.setAttribute('data-theme',t==='light'?'light':'dark');}catch(e){}})();`
 
+const GTM_ID = 'GTM-KLZZ28LK'
+const GTM_SCRIPT = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${GTM_ID}');`
+
 // Devtools are lazy-loaded in development only — fully tree-shaken in production
 const DevTools = import.meta.env.DEV
   ? lazy(() =>
@@ -122,10 +125,21 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
+        {/* GTM must load as early as possible in <head> */}
+        <script dangerouslySetInnerHTML={{ __html: GTM_SCRIPT }} />
         {/* Prevent flash of wrong theme before React hydrates */}
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
       </head>
       <body className="font-sans antialiased [overflow-wrap:anywhere]">
+        {/* GTM noscript fallback — must be first element in <body> */}
+        <noscript>
+          <iframe
+            src={`https://www.googletagmanager.com/ns.html?id=${GTM_ID}`}
+            height="0"
+            width="0"
+            style={{ display: 'none', visibility: 'hidden' }}
+          />
+        </noscript>
         <PersistQueryClientProvider
           client={queryClient}
           persistOptions={{ persister }}
