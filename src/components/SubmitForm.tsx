@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { analytics } from '../lib/analytics'
 
 const SUBMISSION_URL = 'https://d3ma4bqipgu84o.cloudfront.net/api/submission'
 const AUDIENCE_OPTIONS = ['Gents', 'Ladies', 'Both'] as const
@@ -138,8 +139,10 @@ export default function SubmitForm() {
       if (!res.ok) throw new Error('Submission failed')
       setSubmitted(trimmed)
       setStatus('success')
+      analytics.submitMajlisSuccess(trimmed.audience)
     } catch {
       setStatus('error')
+      analytics.submitMajlisError()
     }
   }
 
