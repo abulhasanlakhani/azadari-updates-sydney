@@ -9,6 +9,7 @@ import TableView from '../components/TableView'
 import SkeletonCards from '../components/SkeletonCards'
 import PrintButton from '../components/PrintButton'
 import type { FilterState } from '../types/majlis'
+import { analytics } from '../lib/analytics'
 
 export const Route = createFileRoute('/')({ component: HomePage })
 
@@ -25,8 +26,14 @@ function HomePage() {
   // Default to swipe on mobile, cards on desktop — resolved after mount to avoid SSR mismatch
   const [viewMode, setViewMode] = useState<ViewMode>('cards')
 
+  const switchView = (mode: ViewMode) => {
+    setViewMode(mode)
+    analytics.layoutSwitch(mode)
+  }
+
   useEffect(() => {
-    if (window.innerWidth < 640) setViewMode('swipe')
+    if (window.innerWidth < 640) switchView('swipe')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
@@ -124,7 +131,7 @@ function HomePage() {
           </button>
           {activeFilterCount > 0 && (
             <button
-              onClick={() => setFilters(DEFAULT_FILTERS)}
+              onClick={() => { setFilters(DEFAULT_FILTERS); analytics.filterClear() }}
               className="text-xs text-[var(--gold)] underline underline-offset-2 hover:opacity-75 transition"
             >
               Clear filters
@@ -154,7 +161,7 @@ function HomePage() {
         <div className="flex rounded-lg border border-[var(--border)] overflow-hidden self-start">
           {/* Cards */}
           <button
-            onClick={() => setViewMode('cards')}
+            onClick={() => switchView('cards')}
             aria-pressed={viewMode === 'cards'}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium whitespace-nowrap transition ${
               viewMode === 'cards'
@@ -171,7 +178,7 @@ function HomePage() {
           </button>
           {/* Table */}
           <button
-            onClick={() => setViewMode('table')}
+            onClick={() => switchView('table')}
             aria-pressed={viewMode === 'table'}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium whitespace-nowrap transition border-l border-[var(--border)] ${
               viewMode === 'table'
@@ -187,7 +194,7 @@ function HomePage() {
           </button>
           {/* Swipe */}
           <button
-            onClick={() => setViewMode('swipe')}
+            onClick={() => switchView('swipe')}
             aria-pressed={viewMode === 'swipe'}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium whitespace-nowrap transition border-l border-[var(--border)] ${
               viewMode === 'swipe'

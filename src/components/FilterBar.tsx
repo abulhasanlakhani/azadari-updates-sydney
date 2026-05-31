@@ -1,4 +1,6 @@
+import { useRef } from 'react'
 import type { FilterState, AudienceFilter } from '../types/majlis'
+import { analytics } from '../lib/analytics'
 
 interface FilterBarProps {
   filters: FilterState
@@ -21,6 +23,32 @@ function hasActiveFilters(filters: FilterState) {
 
 export default function FilterBar({ filters, onChange, onClear, total, filtered }: FilterBarProps) {
   const set = (partial: Partial<FilterState>) => onChange({ ...filters, ...partial })
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const dateTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleSearch = (value: string) => {
+    set({ search: value })
+    if (searchTimer.current) clearTimeout(searchTimer.current)
+    searchTimer.current = setTimeout(() => {
+      if (value.trim()) analytics.filterSearch(value.trim())
+    }, 800)
+  }
+
+  const handleDateFrom = (value: string) => {
+    set({ dateFrom: value })
+    if (dateTimer.current) clearTimeout(dateTimer.current)
+    dateTimer.current = setTimeout(() => {
+      analytics.filterDateRange(value, filters.dateTo)
+    }, 600)
+  }
+
+  const handleDateTo = (value: string) => {
+    set({ dateTo: value })
+    if (dateTimer.current) clearTimeout(dateTimer.current)
+    dateTimer.current = setTimeout(() => {
+      analytics.filterDateRange(filters.dateFrom, value)
+    }, 600)
+  }
 
   return (
     <div className="space-y-3">
@@ -35,7 +63,7 @@ export default function FilterBar({ filters, onChange, onClear, total, filtered 
           type="search"
           placeholder="Search by speaker, name or venue…"
           value={filters.search}
-          onChange={(e) => set({ search: e.target.value })}
+          onChange={(e) => handleSearch(e.target.value)}
           className="field w-full pl-9!"
           aria-label="Search majalis"
         />
@@ -48,7 +76,7 @@ export default function FilterBar({ filters, onChange, onClear, total, filtered 
           {AUDIENCE_OPTIONS.map((opt) => (
             <button
               key={opt}
-              onClick={() => set({ audience: opt })}
+              onClick={() => { set({ audience: opt }); analytics.filterAudience(opt) }}
               className={`chip ${filters.audience === opt ? 'active' : ''}`}
               aria-pressed={filters.audience === opt}
             >
@@ -65,7 +93,7 @@ export default function FilterBar({ filters, onChange, onClear, total, filtered 
           <input
             type="date"
             value={filters.dateFrom}
-            onChange={(e) => set({ dateFrom: e.target.value })}
+            onChange={(e) => handleDateFrom(e.target.value)}
             className="field text-xs"
             aria-label="From date"
           />
@@ -73,7 +101,7 @@ export default function FilterBar({ filters, onChange, onClear, total, filtered 
           <input
             type="date"
             value={filters.dateTo}
-            onChange={(e) => set({ dateTo: e.target.value })}
+            onChange={(e) => handleDateTo(e.target.value)}
             className="field text-xs"
             aria-label="To date"
           />
@@ -88,7 +116,7 @@ export default function FilterBar({ filters, onChange, onClear, total, filtered 
         </p>
         {hasActiveFilters(filters) && (
           <button
-            onClick={onClear}
+            onClick={() => { analytics.filterClear(); onClear() }}
             className="text-xs text-[var(--gold)] underline underline-offset-2 hover:opacity-75 transition"
           >
             Clear filters
