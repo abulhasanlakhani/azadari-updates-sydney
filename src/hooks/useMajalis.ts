@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import { fetchMajalis } from '../lib/api'
+import { isUpcoming, sydneyNow } from '../lib/upcoming'
 import type { Majlis, FilterState } from '../types/majlis'
 
 export const MAJALIS_QUERY_KEY = ['majalis'] as const
@@ -8,7 +9,10 @@ export function useMajalis() {
   return useQuery({
     queryKey: MAJALIS_QUERY_KEY,
     queryFn: fetchMajalis,
-    select: (data) => data.majalis,
+    select: (data) => {
+      const now = sydneyNow()
+      return data.majalis.filter((m) => isUpcoming(m, now))
+    },
   })
 }
 
