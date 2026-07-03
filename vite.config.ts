@@ -9,6 +9,9 @@ import tailwindcss from '@tailwindcss/vite'
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
   server: {
+    // Fail fast if port 3000 is taken (usually a stray dev server) instead of
+    // silently hopping to 3001+ and leaving you testing the wrong instance.
+    strictPort: true,
     proxy: {
       '/api/majalis': {
         target: 'https://d3ma4bqipgu84o.cloudfront.net',
