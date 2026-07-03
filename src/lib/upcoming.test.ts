@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { isUpcoming, sydneyNow } from './upcoming'
+import { filterUpcoming, isUpcoming, sydneyNow } from './upcoming'
 
 describe('sydneyNow', () => {
   it('converts a UTC instant to Sydney local date/time', () => {
@@ -39,5 +39,27 @@ describe('isUpcoming', () => {
 
   it('drops events earlier today', () => {
     expect(isUpcoming({ date: '2026-07-03', time: '19:29' }, now)).toBe(false)
+  })
+})
+
+describe('filterUpcoming', () => {
+  const now = { date: '2026-07-03', time: '19:30' }
+  const future = { date: '2026-07-04', time: '10:00' }
+  const past = { date: '2026-07-02', time: '10:00' }
+
+  it('removes past events', () => {
+    expect(filterUpcoming([future, past], now)).toEqual([future])
+  })
+
+  it('returns the same array reference when nothing is filtered out', () => {
+    const majalis = [future, { date: '2026-07-05', time: '20:00' }]
+    expect(filterUpcoming(majalis, now)).toBe(majalis)
+  })
+
+  it('returns a new array when events are removed', () => {
+    const majalis = [future, past]
+    const result = filterUpcoming(majalis, now)
+    expect(result).not.toBe(majalis)
+    expect(result).toEqual([future])
   })
 })

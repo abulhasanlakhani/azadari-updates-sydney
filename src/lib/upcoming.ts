@@ -1,17 +1,22 @@
 import type { Majlis } from '../types/majlis'
 
+// Constructing Intl.DateTimeFormat is expensive (locale + timezone data
+// resolution), and sydneyNow() runs inside the query select on every list
+// render — build the formatter once at module scope and reuse it.
+const SYDNEY_FORMATTER = new Intl.DateTimeFormat('en-CA', {
+  timeZone: 'Australia/Sydney',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+})
+
 // Event dates/times are entered in Sydney local time, so "now" must be
 // computed in Australia/Sydney regardless of the visitor's device timezone.
 export function sydneyNow(reference: Date = new Date()): { date: string; time: string } {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Australia/Sydney',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hourCycle: 'h23',
-  }).formatToParts(reference)
+  const parts = SYDNEY_FORMATTER.formatToParts(reference)
 
   const get = (type: Intl.DateTimeFormatPartTypes) =>
     parts.find((p) => p.type === type)?.value ?? ''
@@ -25,4 +30,14 @@ export function sydneyNow(reference: Date = new Date()): { date: string; time: s
 export function isUpcoming(m: Pick<Majlis, 'date' | 'time'>, now = sydneyNow()): boolean {
   if (m.date !== now.date) return m.date > now.date
   return m.time >= now.time
+}
+
+export function filterUpcoming<T extends Pick<Majlis, 'date' | 'time'>>(
+  majalis: T[],
+  now = sydneyNow()
+): T[] {
+  const upcoming = majalis.filter((m) => isUpcoming(m, now))
+  // Preserve the input array's identity when nothing was filtered out, so
+  // downstream memoisation keyed on reference equality isn't invalidated.
+  return upcoming.length === majalis.length ? majalis : upcoming
 }
