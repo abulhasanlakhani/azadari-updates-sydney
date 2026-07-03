@@ -15,7 +15,9 @@ Built with love and respect for Imam Hussain ibn Ali (a.s.) and the community of
 - Filters — search by name/venue/speaker, filter by audience (Gents/Ladies/Both), date range
 - Clear filters — one-tap reset for all active filters
 - Mobile filter drawer — collapsible bottom-sheet filter panel on mobile
-- Submit a Majlis — community members can submit new majalis via the `/add` page
+- Sign in with mobile — passwordless OTP sign-in for Australian mobile numbers (Supabase Auth + Twilio)
+- Submit a Majlis — signed-in community members can submit new majalis via the `/add` page
+- Protected details — venue address and contact number are only visible to signed-in users (enforced in the database, see `docs/AUTH.md`)
 - Data polling — checks for new majalis every 15 minutes
 - Offline cache — last-fetched data persisted to localStorage
 - New data toast — notifies when new entries are detected
@@ -29,6 +31,8 @@ Built with love and respect for Imam Hussain ibn Ali (a.s.) and the community of
 | Framework  | TanStack Start + React 19                               |
 | Language   | TypeScript (strict)                                     |
 | Styling    | Tailwind CSS v4                                         |
+| Auth       | Supabase Auth — phone OTP (AU mobiles, Twilio Verify)   |
+| Database   | Supabase Postgres (RLS + column-level grants)           |
 | Data       | TanStack Query v5 + localStorage persist                |
 | Animations | Framer Motion                                           |
 | Build      | Vite 8                                                  |
@@ -39,14 +43,21 @@ Built with love and respect for Imam Hussain ibn Ali (a.s.) and the community of
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
+
+# Configure Supabase (optional locally — without it the app browses via the
+# legacy API and sign-in/submissions are disabled). See docs/AUTH.md.
+cp .env.example .env
 
 # Start dev server (http://localhost:3000)
-npm run dev
+pnpm dev
 
 # Build for production
-npm run build
+pnpm build
 ```
+
+Auth and database setup (Supabase project, Twilio SMS, migration, legacy data
+import) is documented in [docs/AUTH.md](docs/AUTH.md).
 
 ## Contributing
 

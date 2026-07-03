@@ -1,8 +1,18 @@
+import { Link } from '@tanstack/react-router'
 import type { Majlis } from '../types/majlis'
 
 interface MajlisCardProps {
   majlis: Majlis
   index?: number
+}
+
+function LockIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5 text-[var(--gold)] opacity-90" aria-hidden="true">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+    </svg>
+  )
 }
 
 function formatDate(dateStr: string) {
@@ -58,12 +68,24 @@ export default function MajlisCard({ majlis, index = 0 }: MajlisCardProps) {
           </svg>
           <span>{formatTime(majlis.time)}</span>
         </div>
-        <div className="flex items-start gap-2">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5 text-[var(--gold)] opacity-90" aria-hidden="true">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-          </svg>
-          <span className="leading-snug">{majlis.address}</span>
-        </div>
+        {majlis.address ? (
+          <div className="flex items-start gap-2">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 mt-0.5 text-[var(--gold)] opacity-90" aria-hidden="true">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span className="leading-snug">{majlis.address}</span>
+          </div>
+        ) : (
+          <div className="flex items-start gap-2">
+            <LockIcon />
+            <Link
+              to="/signin"
+              className="leading-snug text-[var(--text-muted)] underline underline-offset-4 decoration-[var(--border)] transition hover:text-[var(--gold)]"
+            >
+              Sign in to view location &amp; contact
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Speaker notes */}

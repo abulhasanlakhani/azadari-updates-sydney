@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { useTheme } from '../lib/ThemeContext'
+import { useAuth } from '../lib/AuthContext'
 
 const FACEBOOK_URL = 'https://www.facebook.com/AzadariUpdateSydney'
 const YOUTUBE_URL = 'https://www.youtube.com/@azadariupdates-sydney7367'
@@ -21,6 +22,54 @@ function MoonIcon() {
     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
     </svg>
+  )
+}
+
+function SignInIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+      <polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
+    </svg>
+  )
+}
+
+function SignOutIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+    </svg>
+  )
+}
+
+function AuthControls() {
+  const { enabled, loading, session, signOut } = useAuth()
+
+  if (!enabled || loading) return null
+
+  if (!session) {
+    return (
+      <Link
+        to="/signin"
+        className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-surface)] hover:text-[var(--gold)] no-underline"
+        aria-label="Sign in with your mobile number"
+      >
+        <SignInIcon />
+        <span className="hidden sm:inline">Sign In</span>
+      </Link>
+    )
+  }
+
+  return (
+    <button
+      onClick={() => { void signOut() }}
+      className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-surface)] hover:text-[var(--gold)]"
+      aria-label="Sign out"
+    >
+      <SignOutIcon />
+      <span className="hidden sm:inline">Sign Out</span>
+    </button>
   )
 }
 
@@ -57,6 +106,7 @@ export default function Header() {
             </svg>
             Add Majlis
           </Link>
+          <AuthControls />
           <a
             href={FACEBOOK_URL}
             target="_blank"

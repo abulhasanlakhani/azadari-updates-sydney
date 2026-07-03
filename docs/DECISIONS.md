@@ -111,3 +111,47 @@ Two views are available via toggle:
 This application is scoped to Islamic year 1448 (approximately 2026 Gregorian).
 The API data itself is time-bound. The app will be decommissioned after the
 Rabi al-Awwal 1448 season concludes.
+
+---
+
+## ADR-008: Phone-OTP Authentication via Supabase
+
+**Date**: July 2026
+**Status**: Accepted
+
+### Context
+The community asked for (a) sign-in with Australian mobile numbers + OTP,
+(b) submissions restricted to signed-in users, and (c) venue address and
+contact number hidden from anonymous visitors. ADR-001's "no auth" stance no
+longer holds. The legacy CloudFront submissions API is third-party and cannot
+enforce any of this.
+
+Services evaluated: Supabase (chosen), Firebase Auth, Azure-native custom OTP
+(ACS SMS + Functions), Clerk/Auth0 passwordless.
+
+### Decision
+- **Supabase Auth** phone OTP (Twilio Verify as SMS provider) for sign-in.
+  AU mobiles only, validated and normalised to E.164 client-side.
+- **Supabase Postgres** replaces the legacy CloudFront API as the majalis
+  store. The legacy API remains a read-only fallback until env vars are set.
+- Access control lives in the database:
+  - RLS: public select, insert only by `authenticated` as themselves.
+  - **Column-level grants**: `anon` cannot select `contact`/`address` at all
+    — hiding sensitive fields is enforced server-side, not in the UI.
+  - No update/delete grants: event editing/deletion is deliberately out of
+    scope for now. `owner_id` is recorded on every insert so per-owner
+    edit/delete can be added later with two RLS policies.
+
+### Rationale
+- Managed OTP + RLS means near-zero custom security code (no hand-rolled
+  OTP storage, rate limiting, or session management).
+- Free tier fits a seasonal community app; the only per-use cost is SMS
+  (~AU$0.05–0.10 per sign-in).
+- The browser talks to Supabase directly, preserving the SPA architecture
+  (ADR-001/ADR-006) — no new server to run.
+
+### Consequences
+- New external dependencies: Supabase project + Twilio account.
+- `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` required at build time.
+- Existing events need a one-time import (`scripts/import-legacy-majalis.mjs`).
+- Setup runbook: `docs/AUTH.md`.

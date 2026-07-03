@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { analytics } from '../lib/analytics'
+import { createMajlis } from '../lib/api'
+import { useAuth } from '../lib/AuthContext'
+import { formatAuMobileLocal } from '../lib/phone'
 
-const SUBMISSION_URL = 'https://d3ma4bqipgu84o.cloudfront.net/api/submission'
 const AUDIENCE_OPTIONS = ['Gents', 'Ladies', 'Both'] as const
 const DATE_MIN = '2026-06-15'
 const DATE_MAX = '2026-08-24'
@@ -76,7 +78,13 @@ function formatTime(value: string) {
 type Status = 'idle' | 'submitting' | 'success' | 'error'
 
 export default function SubmitForm() {
-  const [values, setValues] = useState<FormValues>(EMPTY)
+  const { user, phone } = useAuth()
+
+  // Pre-fill the contact field with the verified sign-in number
+  const [values, setValues] = useState<FormValues>({
+    ...EMPTY,
+    contact: phone ? formatAuMobileLocal(phone) : '',
+  })
   const [errors, setErrors] = useState<FieldErrors>({})
   const [touched, setTouched] = useState<Partial<Record<keyof FormValues, boolean>>>({})
   const [status, setStatus] = useState<Status>('idle')
@@ -121,22 +129,14 @@ export default function SubmitForm() {
     // Explicit allowlist — never spread arbitrary state into the payload
     if (!AUDIENCE_OPTIONS.includes(trimmed.audience as typeof AUDIENCE_OPTIONS[number])) return
 
+    if (!user) {
+      setStatus('error')
+      return
+    }
+
     setStatus('submitting')
     try {
-      const res = await fetch(SUBMISSION_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          name: trimmed.name,
-          contact: trimmed.contact,
-          date: trimmed.date,
-          time: trimmed.time,
-          address: trimmed.address,
-          audience: trimmed.audience,
-          speakerNotes: trimmed.speakerNotes,
-        }),
-      })
-      if (!res.ok) throw new Error('Submission failed')
+      await createMajlis(trimmed, user.id)
       setSubmitted(trimmed)
       setStatus('success')
       analytics.submitMajlisSuccess(trimmed.audience)
