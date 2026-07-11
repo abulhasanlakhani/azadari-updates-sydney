@@ -37,8 +37,9 @@ describe('isUpcoming', () => {
     expect(isUpcoming({ date: '2026-07-03', time: '19:30' }, now)).toBe(true)
   })
 
-  it('drops events earlier today', () => {
-    expect(isUpcoming({ date: '2026-07-03', time: '19:29' }, now)).toBe(false)
+  it('keeps events earlier today — filtering is date-based, not time-based', () => {
+    expect(isUpcoming({ date: '2026-07-03', time: '19:29' }, now)).toBe(true)
+    expect(isUpcoming({ date: '2026-07-03', time: '08:00' }, now)).toBe(true)
   })
 })
 

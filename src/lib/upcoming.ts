@@ -27,9 +27,10 @@ export function sydneyNow(reference: Date = new Date()): { date: string; time: s
   }
 }
 
+// An event stays "upcoming" for its entire calendar day in Sydney time:
+// today's majalis remain listed even after their start time has passed.
 export function isUpcoming(m: Pick<Majlis, 'date' | 'time'>, now = sydneyNow()): boolean {
-  if (m.date !== now.date) return m.date > now.date
-  return m.time >= now.time
+  return m.date >= now.date
 }
 
 export function filterUpcoming<T extends Pick<Majlis, 'date' | 'time'>>(
