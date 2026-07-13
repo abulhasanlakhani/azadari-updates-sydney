@@ -43,4 +43,16 @@ export const analytics = {
   submitMajlisError() {
     push({ event: 'submit_majlis_error' })
   },
+
+  otpRequested() {
+    push({ event: 'auth_otp_requested' })
+  },
+
+  signInSuccess() {
+    push({ event: 'auth_sign_in_success' })
+  },
+
+  signOut() {
+    push({ event: 'auth_sign_out' })
+  },
 }

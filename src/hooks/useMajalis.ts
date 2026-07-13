@@ -24,7 +24,8 @@ export function useFilteredMajalis(filters: FilterState) {
       const term = filters.search.toLowerCase()
       const inSpeaker = m.speakerNotes.toLowerCase().includes(term)
       const inName = m.name.toLowerCase().includes(term)
-      const inAddress = m.address.toLowerCase().includes(term)
+      // address is withheld from anonymous users
+      const inAddress = (m.address ?? '').toLowerCase().includes(term)
       if (!inSpeaker && !inName && !inAddress) return false
     }
     return true

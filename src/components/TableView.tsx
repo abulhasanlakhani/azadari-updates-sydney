@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import type { Majlis } from '../types/majlis'
 
 interface TableViewProps {
@@ -71,7 +72,14 @@ export default function TableView({ majalis }: TableViewProps) {
                 <AudienceBadge audience={majlis.audience} />
               </td>
               <td className="px-4 py-3 text-[var(--text-muted)] max-w-[220px]">
-                {majlis.address}
+                {majlis.address ?? (
+                  <Link
+                    to="/signin"
+                    className="underline underline-offset-4 decoration-[var(--border)] transition hover:text-[var(--gold)]"
+                  >
+                    Sign in to view
+                  </Link>
+                )}
               </td>
               <td className="px-4 py-3 text-[var(--text-muted)]">
                 {majlis.speakerNotes || <span className="opacity-40">—</span>}
